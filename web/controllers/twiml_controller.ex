@@ -5,7 +5,7 @@ defmodule Twilixr.TwimlController do
 
   def index(conn, %{"song" => song}) do
     IO.puts("song -> " <> song)
-    render(conn, "index.html", song: song)
+    render(conn, "index.html", %{song: song})
   end
 end
 
