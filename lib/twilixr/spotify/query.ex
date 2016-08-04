@@ -27,9 +27,13 @@ defmodule Twilixr.Spotify.Query do
   end
 
   defp fetch_from_spotify(query_str) do
-    %{:body => response} =
+    # IO.puts("fetch_from_spotify #1")
+    {:ok, %{:body => response}} =
       HTTPoison.get(@spotify_url <> URI.encode(query_str))
+    # IO.puts("fetch_from_spotify #2")
     {:ok, body} = Poison.decode(response)
+    IO.puts("fetch_from_spotify #3")
+    IO.puts("body: #{inspect(body)}")
     body
     |> get_in(["tracks", "items"])
     |> List.first

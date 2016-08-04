@@ -11,8 +11,8 @@ defmodule Twilixr.Spotify do
   end
 
   def search(song, twilio_data) do
-    IO.puts 'Song' <> song
-    IO.puts 'twilio_data' <> twilio_data
+    IO.puts("Song " <> song)
+    IO.puts("twilio_data #{inspect(twilio_data)}")
     song
     |> spawn_search(twilio_data)
     |> await_results
@@ -61,19 +61,28 @@ defmodule Twilixr.Spotify do
     ])
   end
 
-
+  # make sure you are using your prod api credentials to make
+  # a real call
   defp notify_success(preview_url, %{from: from, to: to}) do
-    ExTwilio.Message.create([
+
+    IO.puts("here is your preview_url #{preview_url}")
+    IO.puts("from: #{from}")
+    IO.puts("to: #{to}")
+    result = ExTwilio.Message.create([
       From: to,
       To: from,
       Body: "Your clip is on the way!"
     ])
 
-    ExTwilio.Call.create([
+    IO.puts("Message.create result=#{inspect(result)}")
+
+    result = ExTwilio.Call.create([
       From: to,
       To: from,
       Url: @ngrok_url <> "#{URI.encode_www_form(preview_url)}"
     ])
+    IO.puts("Call.create result=#{inspect(result)}")
+    result
   end
 
   defp kill(pid, ref) do
